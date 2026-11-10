@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Present for u ✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7aa 50%, #fbcfe8 100%);
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .card-shadow {
+            box-shadow: 0 20px 50px rgba(244, 114, 182, 0.15), 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes softPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animate-soft-pulse {
+            animation: softPulse 2.5s infinite ease-in-out;
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 overflow-x-hidden">
+
+    <!-- Progress Steps Bar (6 Chấm) -->
+    <div class="fixed top-5 left-1/2 -translate-x-1/2 w-11/12 max-w-sm bg-white/70 backdrop-blur-md rounded-full p-2 shadow-sm border border-white/60 z-50 flex justify-between items-center px-5">
+        <span class="text-xs font-bold text-rose-500 tracking-wider">Hành trình mở quà</span>
+        <div class="flex space-x-1.5" id="step-indicators">
+            <div id="ind-1" class="w-5 h-2 rounded-full bg-rose-400 transition-all duration-300"></div>
+            <div id="ind-2" class="w-2 h-2 rounded-full bg-gray-200 transition-all duration-300"></div>
+            <div id="ind-3" class="w-2 h-2 rounded-full bg-gray-200 transition-all duration-300"></div>
+            <div id="ind-4" class="w-2 h-2 rounded-full bg-gray-200 transition-all duration-300"></div>
+            <div id="ind-5" class="w-2 h-2 rounded-full bg-gray-200 transition-all duration-300"></div>
+            <div id="ind-6" class="w-2 h-2 rounded-full bg-gray-200 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="w-full max-w-md bg-white/85 backdrop-blur-xl rounded-3xl p-6 sm:p-8 card-shadow border border-white/80 relative overflow-hidden transition-all duration-500">
+        
+        <!-- ================= BƯỚC 1: XÁC NHẬN MỞ QUÀ ================= -->
+        <section id="step-1" class="text-center space-y-6 py-2">
+            <div class="w-24 h-24 mx-auto bg-rose-50 rounded-full flex items-center justify-center text-4xl shadow-inner animate-float">
+                🎁
+            </div>
+
+            <div class="space-y-2">
+                <span class="inline-block px-3.5 py-1 bg-rose-100 text-rose-600 font-semibold text-xs rounded-full uppercase tracking-wider">Chào bạn nè</span>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800">
+                    Bạn có một món quà chưa mở!
+                </h1>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    Mở ngay nhe'?
+                </p>
+            </div>
+
+            <div class="relative min-h-[120px] w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-3" id="btn-container-1">
+                <button onclick="nextStep(2)" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 transition duration-200 transform hover:-translate-y-0.5 active:translate-y-0">
+                    Mở quà ngay ✨
+                </button>
+                
+                <button id="btn-no" onmouseover="dodgeButton()" onclick="dodgeButton()" class="w-full sm:w-auto px-6 py-3.5 bg-gray-100 text-gray-600 font-semibold rounded-2xl border border-gray-200 transition-all duration-200 absolute sm:static">
+                    Không mở
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= BƯỚC 2: TÍCH NĂNG LƯỢNG ================= -->
+        <section id="step-2" class="hidden text-center space-y-6 py-2">
+            <div class="w-20 h-20 mx-auto bg-amber-50 rounded-full flex items-center justify-center text-3xl shadow-inner">
+                ⚡
+            </div>
+
+            <div class="space-y-2">
+                <span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 font-semibold text-xs rounded-full uppercase tracking-wider">Khóa năng lượng</span>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800">
+                    Nạp đầy 100% năng lượng
+                </h2>
+                <p class="text-gray-500 text-xs sm:text-sm" id="click-hint-text">
+                    Hãy nhấn liên tục vào nút bên dưới để nạp điện nhé!
+                </p>
+            </div>
+
+            <div class="space-y-2">
+                <div class="w-full bg-gray-100 h-4 rounded-full overflow-hidden p-0.5 border border-gray-200 shadow-inner">
+                    <div id="progress-bar" class="bg-gradient-to-r from-amber-400 to-rose-400 h-full rounded-full transition-all duration-300 w-0"></div>
+                </div>
+                <div class="flex justify-between items-center text-xs font-bold text-gray-500 px-1">
+                    <span>Mức nạp:</span>
+                    <span id="percent-text" class="text-rose-500 font-extrabold text-sm">0%</span>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button id="charge-btn" onclick="handleChargeClick()" class="w-full py-4 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-extrabold text-base rounded-2xl shadow-md transition transform active:scale-95">
+                    Chạm để nạp năng lượng 💖
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= BƯỚC 3: LAU SẠCH HỘP QUÀ ================= -->
+        <section id="step-3" class="hidden text-center space-y-5 py-2">
+            <div class="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center text-3xl shadow-inner">
+                🧼
+            </div>
+
+            <div class="space-y-1">
+                <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 font-semibold text-xs rounded-full uppercase tracking-wider">Hộp quà bị bẩn rồi</span>
+                <h2 class="text-xl font-bold text-gray-800">
+                    Lau sạch bụi bẩn trên hộp quà
+                </h2>
+                <p class="text-gray-500 text-xs">Chạm vào khăn lau 3 lần để làm sạch nhé!</p>
+            </div>
+
+            <div class="p-6 bg-blue-50/50 rounded-2xl border border-blue-100 flex flex-col items-center justify-center space-y-3">
+                <div id="dusty-box" class="text-6xl transition-all duration-300 opacity-40 blur-[2px]">
+                    📦
+                </div>
+                <p id="clean-status" class="text-xs font-semibold text-blue-600">Vẫn còn bẩn lắm (0/3)</p>
+            </div>
+
+            <button onclick="cleanBox()" class="w-full py-3.5 bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-100 transition duration-200">
+                ✨ Lau hộp quà ngay!
+            </button>
+        </section>
+
+
+        <!-- ================= BƯỚC 4: CÂU HỎI BẮT BÀI ================= -->
+        <section id="step-4" class="hidden text-center space-y-5 py-2">
+            <div class="w-20 h-20 mx-auto bg-pink-50 rounded-full flex items-center justify-center text-3xl shadow-inner">
+                🤔
+            </div>
+
+            <div class="space-y-1">
+                <span class="inline-block px-3 py-1 bg-pink-100 text-pink-700 font-semibold text-xs rounded-full uppercase tracking-wider">Xác minh danh tính</span>
+                <h2 class="text-xl font-bold text-gray-800">
+                    Ai là người đẹp trai nhất hôm nay?
+                </h2>
+                <p class="text-gray-500 text-xs">Chọn đúng mới được cho qua nhe!</p>
+            </div>
+
+            <div class="space-y-2.5 pt-2">
+                <button onclick="answerQuiz(false)" class="w-full py-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm rounded-xl border border-rose-200 transition">
+                    A. Trương Gia Sinh 👑
+                </button>
+                <button onclick="answerQuiz(false)" class="w-full py-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm rounded-xl border border-rose-200 transition">
+                    B. Sinh chứ ai nữa 😎
+                </button>
+                <button onclick="answerQuiz(true)" class="w-full py-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm rounded-xl border border-rose-200 transition">
+                    C. Anh Tuân ❤️
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= BƯỚC 5: MẬT KHẨU XÁC MINH ================= -->
+        <section id="step-5" class="hidden text-center space-y-5 py-2">
+            <div class="w-20 h-20 mx-auto bg-purple-50 rounded-full flex items-center justify-center text-3xl shadow-inner">
+                🔑
+            </div>
+
+            <div class="space-y-1">
+                <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 font-semibold text-xs rounded-full uppercase tracking-wider">Mật khẩu cuối cùng</span>
+                <h2 class="text-xl font-bold text-gray-800">
+                    Nhập chìa khóa mở thiệp
+                </h2>
+                <p class="text-gray-500 text-xs">Gợi ý đơn giản bên dưới nha:</p>
+            </div>
+
+            <div class="p-4 bg-purple-50/60 rounded-2xl border border-purple-100 text-left space-y-3">
+                <div class="flex items-center space-x-2 text-xs font-bold text-purple-700 uppercase">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Từ khóa:</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-purple-200 font-mono text-sm text-center text-purple-600 font-bold select-none tracking-wide" id="captcha-target">
+                    Sinh nhật sinh
+                </div>
+                <input type="text" id="password-input" placeholder="Nhập cụm từ trên vào đây..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none text-sm transition-all" autocomplete="off">
+            </div>
+
+            <p id="password-error" class="text-xs text-rose-500 font-medium h-4 opacity-0 transition-opacity">
+                Hình như chưa đúng lắm, bạn nhập chuẩn "Sinh nhật sinh" nha!
+            </p>
+
+            <button onclick="verifyPassword()" class="w-full py-3.5 bg-gradient-to-r from-purple-500 to-rose-400 hover:from-purple-600 hover:to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-purple-100 transition duration-200">
+                Mở bức thư ✨
+            </button>
+        </section>
+
+
+        <!-- ================= BƯỚC 6: THIỆP MỪNG CHÍNH THỨC ================= -->
+        <section id="step-6" class="hidden text-center space-y-6 py-1">
+            <div class="space-y-1">
+                <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 font-bold text-xs rounded-full uppercase tracking-wider">IT'S YOUR BIRTHDAY</span>
+                <h2 class="text-2xl font-bold text-gray-800">
+                    WISH U ALL THE BEST! 🌸
+                </h2>
+            </div>
+
+            <!-- Card Envelope Layout -->
+            <div class="relative bg-gradient-to-b from-rose-50/80 to-pink-50/50 p-6 rounded-3xl border border-rose-100 text-left space-y-4 shadow-sm">
+                <div class="flex items-center space-x-3 border-b border-rose-100 pb-3">
+                    <div class="w-10 h-10 bg-rose-400 text-white rounded-full flex items-center justify-center text-lg shadow-sm">
+                        💌
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm">Lời nhắn ko chân thành</h3>
+                        <p class="text-xs text-rose-400 font-medium">From người kbt khi nào gặp lại</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+                    <p class="handwriting text-2xl text-rose-600">Hi Chi,</p>
+                    <p>
+                        Thực ra cũng không có gì đâu, chỉ là chi đã hơn sinh 1 tuổi và sinh k đồng ý, jokeeeeeee hôm nay là ngày đặc biệt của chi sinh chỉ luôn mong rằng chi sẽ luôn có được thật nhìu sức khỏe, niềm vui, yêu thương, hạnh phúc cùng cả nhà, bạn bè và anh tuân thân yêu!
+                    </p>
+                    <p>
+                        Nhanh thậc giờ lớn hết rồi nên cũng mong là mọi kế hoạch, mục tiêu, tham vọng của chi sẽ đều diễn ra thuận lợi suôn sẻ nhé, chắc mình sẽ gặp lại nhau vào đám cưới của người còn lại...
+                     </p>
+                    <p>
+                        Cho đến lúc đó thì phải thậc mạnh khỏe đó nha bang, mình mong ngày hôm nay của bang sẽ thậc trọn vẹn bên những người bang yêu thương và những người yêu thương bang.
+                    </p>
+                    <div class="p-3 bg-white/90 rounded-2xl border border-rose-100 text-center text-rose-500 font-semibold text-xs shadow-sm">
+                        ✨ Hôm nay là thứ 3! ✨
+                    </div>
+                </div>
+
+                <div class="pt-2 flex justify-between items-center text-xs text-gray-400 font-medium border-t border-rose-100">
+                    <span>T ặ n g ❤️</span>
+                    <span class="italic">Best Bday!</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="rePlay()" class="w-1/2 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold text-xs rounded-xl transition">
+                    🔄 Xem lại từ đầu
+                </button>
+                <button onclick="triggerConfetti()" class="w-1/2 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs rounded-xl shadow-sm transition">
+                    🎉 Bắn pháo hoa!
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Custom Modal Popup -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center space-y-4 shadow-xl transform transition-all scale-95 opacity-0" id="modal-content">
+            <div class="text-4xl" id="modal-icon">😊</div>
+            <h3 class="text-base font-bold text-gray-800" id="modal-title">Thông báo</h3>
+            <p class="text-xs text-gray-600 leading-relaxed" id="modal-msg">Nội dung thông báo...</p>
+            <button onclick="closeModal()" class="w-full py-2.5 bg-rose-400 hover:bg-rose-500 text-white font-bold rounded-xl text-xs transition">
+                Đã hiểu
+            </button>
+        </div>
+    </div>
+
+    <!-- AUDIO GENERATOR (Web Audio API) -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.06);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.06);
+            } else if (type === 'dodge') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(350, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'win') {
+                const now = audioCtx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, index) => {
+                    const noteOsc = audioCtx.createOscillator();
+                    const noteGain = audioCtx.createGain();
+                    noteOsc.connect(noteGain);
+                    noteGain.connect(audioCtx.destination);
+                    noteOsc.frequency.value = freq;
+                    noteGain.gain.setValueAtTime(0.15, now + index * 0.09);
+                    noteGain.gain.linearRampToValueAtTime(0.01, now + index * 0.09 + 0.2);
+                    noteOsc.start(now + index * 0.09);
+                    noteOsc.stop(now + index * 0.09 + 0.2);
+                });
+            }
+        }
+
+        // State logic
+        let currentStep = 1;
+        let chargeCount = 0;
+        let isStuckHandled = false;
+        let cleanCount = 0;
+
+        // Step 1: Dodge Button Logic
+        function dodgeButton() {
+            const btnNo = document.getElementById('btn-no');
+            const container = document.getElementById('btn-container-1');
+
+            playSound('dodge');
+
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = btnNo.getBoundingClientRect();
+
+            const maxX = Math.max(10, containerRect.width - btnRect.width - 20);
+            const maxY = Math.max(10, containerRect.height - btnRect.height - 10);
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            btnNo.style.position = 'absolute';
+            btnNo.style.left = `${randomX}px`;
+            btnNo.style.top = `${randomY}px`;
+        }
+
+        // Step 2: Charge / Multi-click logic
+        function handleChargeClick() {
+            playSound('click');
+            const progressBar = document.getElementById('progress-bar');
+            const percentText = document.getElementById('percent-text');
+            const hintText = document.getElementById('click-hint-text');
+
+            chargeCount++;
+
+            if (chargeCount === 8 && !isStuckHandled) {
+                chargeCount = 5;
+                isStuckHandled = true;
+                
+                progressBar.style.width = `50%`;
+                percentText.innerText = `50%`;
+                hintText.innerText = "Hình như hơi bị kẹt nhẹ, bạn ấn mạnh tay thêm chút nha!";
+                
+                showModal("Thông báo nhỏ", "Hộp quà hơi kẹt một chút, bạn nhấn thêm vài lần nữa là mở được ngay!", "🎁");
+                return;
+            }
+
+            let percent = Math.min(chargeCount * 10, 100);
+            progressBar.style.width = `${percent}%`;
+            percentText.innerText = `${percent}%`;
+
+            if (percent >= 100) {
+                setTimeout(() => nextStep(3), 300);
+            }
+        }
+
+        // Step 3: Clean Box Logic
+        function cleanBox() {
+            playSound('click');
+            cleanCount++;
+            const dustyBox = document.getElementById('dusty-box');
+            const cleanStatus = document.getElementById('clean-status');
+
+            if (cleanCount === 1) {
+                dustyBox.className = "text-6xl transition-all duration-300 opacity-70 blur-[1px]";
+                cleanStatus.innerText = "Sắp sạch rồi nè... (1/3)";
+            } else if (cleanCount === 2) {
+                dustyBox.className = "text-6xl transition-all duration-300 opacity-90 blur-none";
+                cleanStatus.innerText = "Bóng loáng rồi đó! Thêm 1 lần nữa! (2/3)";
+            } else if (cleanCount >= 3) {
+                dustyBox.className = "text-6xl transition-all duration-300 opacity-100 scale-110";
+                cleanStatus.innerText = "Hộp quà đã sạch sẽ 100%! ✨";
+                setTimeout(() => nextStep(4), 400);
+            }
+        }
+
+        // Step 4: Quiz Logic (Đã đổi C thành Anh Tuân là đúng)
+        function answerQuiz(isCorrect) {
+            if (isCorrect) {
+                playSound('click');
+                showModal("Chính xác 100%!", "Đáp án không thể bàn cãi! Chuẩn bị nhập mật khẩu nhé 🎉", "🌟");
+                setTimeout(() => {
+                    closeModal();
+                    nextStep(5);
+                }, 1200);
+            } else {
+                playSound('dodge');
+                const sec = document.getElementById('step-4');
+                sec.classList.add('shake');
+                setTimeout(() => sec.classList.remove('shake'), 400);
+                showModal("Sai bét rùi nha!", "Nghĩ kĩ lại xem ai mới là đáp án đúng nhất hôm nay 😜", "❌");
+            }
+        }
+
+        // Step 5: Password verification (Đã khớp từ khóa "Sinh nhật sinh")
+        function verifyPassword() {
+            const input = document.getElementById('password-input').value.trim();
+            const target = "Sinh nhật sinh";
+            const errorMsg = document.getElementById('password-error');
+
+            if (input.toLowerCase() === target.toLowerCase()) {
+                errorMsg.classList.add('opacity-0');
+                nextStep(6);
+            } else {
+                playSound('dodge');
+                errorMsg.classList.remove('opacity-0');
+                const container = document.getElementById('step-5');
+                container.classList.add('shake');
+                setTimeout(() => container.classList.remove('shake'), 400);
+            }
+        }
+
+        // Navigation
+        function nextStep(step) {
+            playSound('click');
+            
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            
+            currentStep = step;
+            const newSec = document.getElementById(`step-${currentStep}`);
+            newSec.classList.remove('hidden');
+
+            for (let i = 1; i <= 6; i++) {
+                const ind = document.getElementById(`ind-${i}`);
+                if (i === currentStep) {
+                    ind.className = "w-5 h-2 rounded-full bg-rose-400 transition-all duration-300";
+                } else if (i < currentStep) {
+                    ind.className = "w-2 h-2 rounded-full bg-rose-200 transition-all duration-300";
+                } else {
+                    ind.className = "w-2 h-2 rounded-full bg-gray-200 transition-all duration-300";
+                }
+            }
+
+            if (step === 6) {
+                playSound('win');
+                triggerConfetti();
+            }
+        }
+
+        // Modal Helpers
+        function showModal(title, msg, icon = "😊") {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-msg').innerText = msg;
+            document.getElementById('modal-icon').innerText = icon;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            playSound('click');
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        // Confetti effect
+        function triggerConfetti() {
+            var count = 180;
+            var defaults = { origin: { y: 0.7 } };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+        }
+
+        // Reset game
+        function rePlay() {
+            chargeCount = 0;
+            isStuckHandled = false;
+            cleanCount = 0;
+            
+            document.getElementById('progress-bar').style.width = "0%";
+            document.getElementById('percent-text').innerText = "0%";
+            document.getElementById('click-hint-text').innerText = "Hãy nhấn liên tục vào nút bên dưới để nạp điện nhé!";
+            document.getElementById('password-input').value = "";
+            document.getElementById('dusty-box').className = "text-6xl transition-all duration-300 opacity-40 blur-[2px]";
+            document.getElementById('clean-status').innerText = "Vẫn còn bẩn lắm (0/3)";
+            
+            const btnNo = document.getElementById('btn-no');
+            btnNo.style.position = 'static';
+            
+            nextStep(1);
+        }
+    </script>
+</body>
+</html>
